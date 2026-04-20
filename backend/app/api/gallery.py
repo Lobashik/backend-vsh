@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from backend.app.dependencies.dependencies import get_current_user, get_drawings_service
+from app.dependencies.dependencies import get_current_user, get_drawings_service
 from app.models.entities import User
 from app.schemas.drawings import DrawingResponse
 from app.services.drawings import DrawingsService

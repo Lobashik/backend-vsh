@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import FileResponse
 
-from backend.app.dependencies.dependencies import get_current_user, get_drawings_service, map_app_error
+from app.dependencies.dependencies import get_current_user, get_drawings_service, map_app_error
 from app.core.errors import AppError, ValidationError
 from app.models.entities import User
 from app.schemas.drawings import DrawingResponse, DrawingUploadResponse

@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from backend.app.dependencies.dependencies import get_auth_service, map_app_error, to_user_read
+from app.dependencies.dependencies import get_auth_service, map_app_error, to_user_read
 from app.core.errors import AppError
 from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse, UserRead
 from app.services.auth import AuthService

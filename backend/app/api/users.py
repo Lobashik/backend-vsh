@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from backend.app.dependencies.dependencies import get_current_user, to_user_read
+from app.dependencies.dependencies import get_current_user, to_user_read
 from app.models.entities import User
 from app.schemas.auth import UserRead
 
