@@ -70,37 +70,16 @@ class DrawingsService:
         )
 
     def list_mine(self, user: User) -> list[DrawingView]:
-        return [self._view(item, True) for item in self.drawings.list_by_owner(user.id)]
+        pass
 
     def list_gallery(self) -> list[DrawingView]:
-        return [self._view(item, False) for item in self.drawings.list_all()]
+        pass
 
     def get_mine(self, drawing_id: str, user: User) -> DrawingView:
-        item = self.drawings.get_by_id(drawing_id)
-        if item is None:
-            raise NotFoundError("Drawing not found")
-        if item.owner_id != user.id:
-            raise PermissionDeniedError("You do not have access to this drawing")
-        return self._view(item, True)
+        pass
 
     def create(self, user: User, title: str, content: bytes, content_type: str | None) -> DrawingView:
-        self._validate_png(content_type, content)
-        drawing_id = str(uuid4())
-        item = Drawing(
-            id=drawing_id,
-            owner_id=user.id,
-            title=self._validate_title(title),
-            file_name=f"{drawing_id}.png",
-            created_at=utc_now(),
-            updated_at=utc_now(),
-        )
-        self.file_storage.save_png(drawing_id, content)
-        try:
-            self.drawings.create(item)
-        except Exception as exc:
-            self.file_storage.delete_png(drawing_id)
-            raise ConflictError("Failed to persist drawing") from exc
-        return self._view(item, True)
+        pass
 
     def update(
         self,
@@ -110,38 +89,10 @@ class DrawingsService:
         content: bytes,
         content_type: str | None,
     ) -> DrawingView:
-        existing = self.drawings.get_by_id(drawing_id)
-        if existing is None:
-            raise NotFoundError("Drawing not found")
-        if existing.owner_id != user.id:
-            raise PermissionDeniedError("You do not have access to this drawing")
-
-        self._validate_png(content_type, content)
-        updated = Drawing(
-            id=existing.id,
-            owner_id=existing.owner_id,
-            title=self._validate_title(title) if title is not None else existing.title,
-            file_name=existing.file_name,
-            created_at=existing.created_at,
-            updated_at=utc_now(),
-        )
-        self.file_storage.save_png(drawing_id, content)
-        self.drawings.update(updated)
-        return self._view(updated, True)
+        pass
 
     def delete(self, drawing_id: str, user: User) -> None:
-        existing = self.drawings.get_by_id(drawing_id)
-        if existing is None:
-            raise NotFoundError("Drawing not found")
-        if existing.owner_id != user.id:
-            raise PermissionDeniedError("You do not have access to this drawing")
-        self.drawings.delete(drawing_id)
-        self.file_storage.delete_png(drawing_id)
+        pass
 
     def file_path(self, drawing_id: str) -> str:
-        if self.drawings.get_by_id(drawing_id) is None:
-            raise NotFoundError("Drawing not found")
-        path = self.file_storage.path_for(drawing_id)
-        if not path.exists():
-            raise NotFoundError("Drawing file not found")
-        return str(path)
+        pass
