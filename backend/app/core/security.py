@@ -1,12 +1,6 @@
-from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-
 from app.core.settings import Settings
-
-pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 
 class SecurityError(ValueError):
@@ -14,26 +8,20 @@ class SecurityError(ValueError):
 
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    """Hash a plain text password. TODO: Implement with passlib."""
+    pass
 
 
 def verify_password(plain_password: str, password_hash: str) -> bool:
-    return pwd_context.verify(plain_password, password_hash)
+    """Verify a plain text password against its hash. TODO: Implement with passlib."""
+    pass
 
 
 def create_access_token(subject: str, settings: Settings, extra_claims: dict[str, Any] | None = None) -> str:
-    expires = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
-    payload: dict[str, Any] = {"sub": subject, "exp": expires}
-    if extra_claims:
-        payload.update(extra_claims)
-    return jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
+    """Create a JWT access token. TODO: Implement with python-jose."""
+    pass
 
 
 def decode_access_token(token: str, settings: Settings) -> dict[str, Any]:
-    try:
-        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
-    except JWTError as exc:
-        raise SecurityError("Invalid authentication token") from exc
-    if not payload.get("sub"):
-        raise SecurityError("Invalid authentication token")
-    return payload
+    """Decode and validate a JWT access token. TODO: Implement with python-jose."""
+    pass

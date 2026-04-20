@@ -61,20 +61,8 @@ async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     auth_service: Annotated[AuthService, Depends(get_auth_service)],
 ) -> User:
-    settings = get_settings()
-    try:
-        payload = decode_access_token(token, settings)
-    except SecurityError as exc:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(exc)) from exc
-
-    user_id = payload.get("sub")
-    if not isinstance(user_id, str):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication token")
-
-    try:
-        return auth_service.get_by_id(user_id)
-    except AppError as exc:
-        raise map_app_error(exc)
+    """TODO: Implement JWT token validation and user retrieval."""
+    pass
 
 
 def to_user_read(user: User) -> UserRead:

@@ -30,7 +30,7 @@ def list_my_images(
     current_user: Annotated[User, Depends(get_current_user)],
     drawings_service: Annotated[DrawingsService, Depends(get_drawings_service)],
 ) -> list[DrawingResponse]:
-    pass
+    return [_to_response(item) for item in drawings_service.list_mine(current_user)]
 
 
 @router.post("", response_model=DrawingUploadResponse, status_code=201)
@@ -40,41 +40,39 @@ async def create_image(
     title: Annotated[str, Form()],
     file: Annotated[UploadFile, File()],
 ) -> DrawingUploadResponse:
-    pass
+    content = await file.read()
+    try:
+        created = drawings_service.create(current_user, title, content, file.content_type)
+    except AppError as error:
+        raise map_app_error(error)
+    return DrawingUploadResponse(
+        id=created.id,
+        title=created.title,
+        created_at=created.created_at,
+        updated_at=created.updated_at,
+        file_url=created.file_url,
+    )
+
 
 @router.get("/{drawing_id}", response_model=DrawingResponse)
 def get_my_image(
-    drawing_id: str,
-    current_user: Annotated[User, Depends(get_current_user)],
-    drawings_service: Annotated[DrawingsService, Depends(get_drawings_service)],
 ) -> DrawingResponse:
     pass
 
 
 @router.get("/{drawing_id}/file")
 def get_image_file(
-    drawing_id: str,
-    _current_user: Annotated[User, Depends(get_current_user)],
-    drawings_service: Annotated[DrawingsService, Depends(get_drawings_service)],
 ):
     pass
 
 
 @router.patch("/{drawing_id}", response_model=DrawingUploadResponse)
 async def update_image(
-    drawing_id: str,
-    current_user: Annotated[User, Depends(get_current_user)],
-    drawings_service: Annotated[DrawingsService, Depends(get_drawings_service)],
-    title: Annotated[str | None, Form()] = None,
-    file: Annotated[UploadFile | None, File()] = None,
 ) -> DrawingUploadResponse:
     pass
 
 
 @router.delete("/{drawing_id}")
 def delete_image(
-    drawing_id: str,
-    current_user: Annotated[User, Depends(get_current_user)],
-    drawings_service: Annotated[DrawingsService, Depends(get_drawings_service)],
 ) -> dict[str, str]:
     pass

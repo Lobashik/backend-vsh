@@ -70,16 +70,32 @@ class DrawingsService:
         )
 
     def list_mine(self, user: User) -> list[DrawingView]:
-        pass
+        return [self._view(item, True) for item in self.drawings.list_by_owner(user.id)]
 
     def list_gallery(self) -> list[DrawingView]:
-        pass
+        return [self._view(item, False) for item in self.drawings.list_all()]
 
     def get_mine(self, drawing_id: str, user: User) -> DrawingView:
         pass
 
     def create(self, user: User, title: str, content: bytes, content_type: str | None) -> DrawingView:
-        pass
+        self._validate_png(content_type, content)
+        drawing_id = str(uuid4())
+        item = Drawing(
+            id=drawing_id,
+            owner_id=user.id,
+            title=self._validate_title(title),
+            file_name=f"{drawing_id}.png",
+            created_at=utc_now(),
+            updated_at=utc_now(),
+        )
+        self.file_storage.save_png(drawing_id, content)
+        try:
+            self.drawings.create(item)
+        except Exception as exc:
+            self.file_storage.delete_png(drawing_id)
+            raise ConflictError("Failed to persist drawing") from exc
+        return self._view(item, True)
 
     def update(
         self,
